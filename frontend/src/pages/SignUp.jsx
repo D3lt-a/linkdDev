@@ -1,20 +1,36 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createUser } from "../services/api";
 
 export default function SignUp() {
     const [form, setForm] = useState({ username: "", email: "", password: "", confirm: "" });
     const [focused, setFocused] = useState(null);
+    const navigate = useNavigate();
 
     const handleChange = (e) =>
         setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (form.password !== form.confirm) {
             alert("Passwords do not match");
             return;
         }
-        // TODO: POST /api/auth/register
+        try {
+            await createUser(
+                form.gitID,
+                form.fullName,
+                form.userName,
+                form.Bio,
+                form.email,
+                form.password
+            );
+            setForm({ username: "", email: "", password: "", confirm: "" });
+            navigate("/dashboard");
+        } catch (error) {
+            alert("An error occurred during sign-up. Please try again.");
+            console.error("Error during sign-up:", error);
+        }
         console.log("Sign up payload:", form);
     };
 
@@ -62,12 +78,12 @@ export default function SignUp() {
 
             {/* Radial glow */}
             <div
-                className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+                className="absolute -top-20 left-1/2 -translate-x-1/2 w-150 h-75 pointer-events-none"
                 style={{ background: "radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%)" }}
             />
 
             {/* Card */}
-            <div className="relative z-10 w-full max-w-[420px] bg-[#0F172A]/85 border border-[#1E293B] rounded-2xl px-8 py-10 backdrop-blur-xl">
+            <div className="relative z-10 w-full max-w-105 bg-[#0F172A]/85 border border-[#1E293B] rounded-2xl px-8 py-10 backdrop-blur-xl">
 
                 {/* Logo */}
                 <div className="flex items-center gap-3 mb-8">
@@ -116,7 +132,7 @@ export default function SignUp() {
                                 onFocus={() => setFocused(field.name)}
                                 onBlur={() => setFocused(null)}
                                 className={`bg-[#0B1120] border rounded-lg px-4 py-2.5 text-slate-100 text-sm outline-none w-full transition-all duration-200 placeholder:text-slate-600
-                  ${focused === field.name
+                    ${focused === field.name
                                         ? "border-indigo-500 shadow-[0_0_0_3px_rgba(99,102,241,0.15)]"
                                         : "border-[#1E293B] hover:border-slate-600"}`}
                             />
@@ -145,12 +161,12 @@ export default function SignUp() {
                                     {[1, 2, 3, 4].map((i) => (
                                         <div
                                             key={i}
-                                            className={`flex-1 h-[3px] rounded-full transition-colors duration-300 ${i <= strength ? strengthColor : "bg-[#1E293B]"
+                                            className={`flex-1 h-0.75 rounded-full transition-colors duration-300 ${i <= strength ? strengthColor : "bg-[#1E293B]"
                                                 }`}
                                         />
                                     ))}
                                 </div>
-                                <span className={`text-[11px] min-w-[36px] ${strengthText}`}>
+                                <span className={`text-[11px] min-w-9 ${strengthText}`}>
                                     {strengthLabel}
                                 </span>
                             </div>

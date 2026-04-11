@@ -1,17 +1,26 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { verifyUser } from "../services/api";
 
 export default function SignIn() {
     const [form, setForm] = useState({ email: "", password: "" });
     const [focused, setFocused] = useState(null);
+    const navigate = useNavigate();
 
     const handleChange = (e) =>
         setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // TODO: POST /api/auth/login
         console.log("Sign in payload:", form);
+        try {
+            await verifyUser(form.email, form.password);
+            setForm({ email: "", password: "" });
+            navigate("/dashboard");
+        } catch (error) {
+            alert("An error occurred during sign-in. Please try again.");
+            console.error("Error during sign-in:", error);
+        }
     };
 
     return (
@@ -29,12 +38,12 @@ export default function SignIn() {
 
             {/* Radial glow */}
             <div
-                className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+                className="absolute -top-20 left-1/2 -translate-x-1/2 w-150 h-75 pointer-events-none"
                 style={{ background: "radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%)" }}
             />
 
             {/* Card */}
-            <div className="relative z-10 w-full max-w-[420px] bg-[#0F172A]/85 border border-[#1E293B] rounded-2xl px-8 py-10 backdrop-blur-xl">
+            <div className="relative z-10 w-full max-w-105 bg-[#0F172A]/85 border border-[#1E293B] rounded-2xl px-8 py-10 backdrop-blur-xl">
 
                 {/* Logo */}
                 <div className="flex items-center gap-3 mb-8">
@@ -81,7 +90,7 @@ export default function SignIn() {
                                 onFocus={() => setFocused(field.name)}
                                 onBlur={() => setFocused(null)}
                                 className={`bg-[#0B1120] border rounded-lg px-4 py-2.5 text-slate-100 text-sm outline-none w-full transition-all duration-200 placeholder:text-slate-600
-                  ${focused === field.name
+                    ${focused === field.name
                                         ? "border-indigo-500 shadow-[0_0_0_3px_rgba(99,102,241,0.15)]"
                                         : "border-[#1E293B] hover:border-slate-600"}`}
                             />
