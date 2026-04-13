@@ -42,8 +42,13 @@ pass.serializeUser((user, done) => {
     done(null, user.id);
 });
 
-pass.deserializeUser((user, done) => {
-    done(null, user)
+pass.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findByPk(id);
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
 })
 
 module.exports = pass;

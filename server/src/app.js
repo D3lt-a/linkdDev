@@ -28,7 +28,7 @@ app.use(pass.initialize());
 app.use(pass.session());
 
 app.use('/auth', userRoutes);
-app.use('/user', gitRoutes);
+app.use('/git', gitRoutes);
 
 db.sync();
 const pt = process.env.PORT;
