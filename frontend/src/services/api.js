@@ -45,3 +45,21 @@ export const createUser = async (gitID, fullName, userName, Bio, Email, Password
         console.error('Error creating user:', error);
     }
 }
+
+export const gitGitProfile = async () => {
+    try {
+        await fetch(`${base}/git`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            return data;
+        })
+    } catch (error) {
+        console.error('Error fetching Git profile:', error);
+    }
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUser } from "../services/api";
+import { createUser, gitGitProfile } from "../services/api";
 
 export default function SignUp() {
     const [form, setForm] = useState({ username: "", email: "", password: "", confirm: "" });
@@ -97,7 +97,7 @@ export default function SignUp() {
 
                 {/* GitHub Button */}
                 <button
-                    onClick={() => console.log("GitHub OAuth")}
+                    onClick={() => window.location.href = "http://localhost:5000/git"}
                     className="w-full flex items-center justify-center gap-3 bg-[#161B22] text-slate-100 border border-[#30363D] rounded-lg py-3 text-sm font-medium font-sans hover:border-slate-500 transition-colors duration-200 cursor-pointer"
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
